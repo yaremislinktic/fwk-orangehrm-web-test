@@ -12,39 +12,39 @@ test.describe('Login - OrangeHRM', () => {
     loginPage = new LoginPage(page);
     await loginPage.goto();
   });
-  test.describe('✅ Happy Path', () => {
+  test.describe(' Happy Path', () => {
 
     test('TC-LOGIN-HP-01: Login exitoso con credenciales de administrador', async ({ page }) => {
 
       await test.step('DADO QUE la página de Login está visible', async () => {
         const isVisible = await loginPage.isLoginPageDisplayed();
-        expect(isVisible, '❌ La página de Login no está visible').toBeTruthy();
-        console.log('✅ Página de Login cargada');
+        expect(isVisible, 'La página de Login no está visible').toBeTruthy();
+        console.log(' Página de Login cargada');
       });
 
       await test.step(`CUANDO ingreso Username válido: "${credentials.admin.username}"`, async () => {
         await loginPage.usernameInput.fill(credentials.admin.username);
         await expect(loginPage.usernameInput).toHaveValue(credentials.admin.username);
-        console.log(`✅ Username: ${credentials.admin.username}`);
+        console.log(` Username: ${credentials.admin.username}`);
       });
 
       await test.step(`Y ingreso Password válida: "${credentials.admin.password}"`, async () => {
         await loginPage.passwordInput.fill(credentials.admin.password);
         await expect(loginPage.passwordInput).toHaveValue(credentials.admin.password);
-        console.log('✅ Password ingresada correctamente');
+        console.log(' Password ingresada correctamente');
       });
 
       await test.step('Y hago clic en el botón Login', async () => {
         await loginPage.loginButton.click();
-        console.log('✅ Clic en Login');
+        console.log(' Clic en Login');
       });
 
       await test.step(`ENTONCES el sistema redirige al Dashboard`, async () => {
         const title = await loginPage.getDashboardTitle();
-        expect(title, `❌ Título esperado: "${expectedMessages.login.dashboardTitle}" — obtenido: "${title}"`)
+        expect(title, ` Título esperado: "${expectedMessages.login.dashboardTitle}" — obtenido: "${title}"`)
           .toBe(expectedMessages.login.dashboardTitle);
         await expect(page).toHaveURL(urls.dashboard);
-        console.log(`✅ Login exitoso — Título: "${title}" | URL: ${page.url()}`);
+        console.log(`Login exitoso — Título: "${title}" | URL: ${page.url()}`);
    
       });
 
@@ -52,7 +52,7 @@ test.describe('Login - OrangeHRM', () => {
 
   }); 
 
-  test.describe('❌ Unhappy Path', () => {
+  test.describe(' Unhappy Path', () => {
 
        test('TC-LOGIN-UP-01: Login fallido con password incorrecta', async ({ page }) => {
 
@@ -79,7 +79,7 @@ test.describe('Login - OrangeHRM', () => {
         await expect(loginPage.errorAlert).toBeVisible();
         expect(errorMsg).toContain(expectedMessages.login.invalidCredentials);
         await expect(page).toHaveURL(urls.loginPage);
-        console.log(`✅ Error correcto: "${errorMsg}"`);
+        console.log(` Error correcto: "${errorMsg}"`);
         await takeEvidence(page, 'TC-LOGIN-UP-01', 'wrong-password'); 
     
       });
@@ -111,7 +111,7 @@ test.describe('Login - OrangeHRM', () => {
         await expect(loginPage.errorAlert).toBeVisible();
         expect(errorMsg).toContain(expectedMessages.login.invalidCredentials);
         await expect(page).toHaveURL(urls.loginPage);
-        console.log(`✅ Error correcto: "${errorMsg}"`);
+        console.log(` Error correcto: "${errorMsg}"`);
   
       });
 
@@ -124,7 +124,7 @@ test.describe('Login - OrangeHRM', () => {
       });
 
       await test.step('CUANDO dejo el campo Username VACÍO', async () => {
-        console.log('⚠️  Username dejado vacío intencionalmente');
+        console.log('  Username dejado vacío intencionalmente');
       });
 
       await test.step(`Y ingreso Password: "${credentials.emptyUsername.password}"`, async () => {
@@ -137,10 +137,10 @@ test.describe('Login - OrangeHRM', () => {
 
       await test.step('ENTONCES aparece validación de campo requerido en Username', async () => {
         const messages = await loginPage.getRequiredMessages();
-        expect(messages.length, '❌ Se esperaba al menos 1 mensaje de campo requerido').toBeGreaterThan(0);
+        expect(messages.length, ' Se esperaba al menos 1 mensaje de campo requerido').toBeGreaterThan(0);
         expect(messages.some(m => m.includes(expectedMessages.login.requiredField))).toBeTruthy();
         await expect(page).toHaveURL(urls.loginPage);
-        console.log(`✅ Validación requerido: ${messages}`);
+        console.log(` Validación requerido: ${messages}`);
       
       });
 
@@ -157,7 +157,7 @@ test.describe('Login - OrangeHRM', () => {
       });
 
       await test.step('Y dejo el campo Password VACÍO', async () => {
-        console.log('⚠️  Password dejada vacía intencionalmente');
+        console.log('  Password dejada vacía intencionalmente');
       });
 
       await test.step('Y hago clic en el botón Login', async () => {
@@ -169,7 +169,7 @@ test.describe('Login - OrangeHRM', () => {
         expect(messages.length).toBeGreaterThan(0);
         expect(messages.some(m => m.includes(expectedMessages.login.requiredField))).toBeTruthy();
         await expect(page).toHaveURL(urls.loginPage);
-        console.log(`✅ Validación requerido: ${messages}`);
+        console.log(` Validación requerido: ${messages}`);
       });
 
     });
@@ -181,7 +181,7 @@ test.describe('Login - OrangeHRM', () => {
       });
 
       await test.step('CUANDO dejo Username Y Password VACÍOS', async () => {
-        console.log('⚠️  Ambos campos dejados vacíos intencionalmente');
+        console.log('  Ambos campos dejados vacíos intencionalmente');
       });
 
       await test.step('Y hago clic en el botón Login', async () => {
@@ -190,12 +190,12 @@ test.describe('Login - OrangeHRM', () => {
 
       await test.step('ENTONCES aparecen 2 mensajes de campo requerido (uno por campo)', async () => {
         const messages = await loginPage.getRequiredMessages();
-        expect(messages.length, `❌ Se esperaban 2 errores de campo requerido — obtenidos: ${messages.length}`).toBe(2);
+        expect(messages.length, ` Se esperaban 2 errores de campo requerido — obtenidos: ${messages.length}`).toBe(2);
         messages.forEach(m =>
-          expect(m, `❌ Mensaje inesperado: "${m}"`).toContain(expectedMessages.login.requiredField)
+          expect(m, `Mensaje inesperado: "${m}"`).toContain(expectedMessages.login.requiredField)
         );
         await expect(page).toHaveURL(urls.loginPage);
-        console.log(`✅ Validaciones requerido (${messages.length}): ${messages}`);
+        console.log(` Validaciones requerido (${messages.length}): ${messages}`);
 
       });
 

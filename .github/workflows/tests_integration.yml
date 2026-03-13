@@ -1,0 +1,54 @@
+name: 🧪 Tests Playwright - OrangeHRM
+
+on:
+  push:
+    branches: [ main ]        # Cada push a main
+  workflow_dispatch:           # Ejecución manual desde GitHub
+  schedule:
+    - cron: '0 13 * * 1-5'   # Lunes a viernes 08:00 AM Colombia (UTC-5)
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10        # Límite de 10 min para el job completo
+
+    steps:
+      # ── 1. Checkout del código ─────────────────────────────
+      - name: 📥 Checkout repositorio
+        uses: actions/checkout@v4
+
+      # ── 2. Setup Node.js ───────────────────────────────────
+      - name: ⚙️ Setup Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '25.2.1'
+          cache: 'npm'
+
+      # ── 3. Instalar dependencias del proyecto ──────────────
+      - name: 📦 Instalar dependencias
+        run: npm ci
+
+      # ── 4. Instalar navegadores de Playwright ──────────────
+      - name: 🌐 Instalar navegadores Playwright
+        run: npx playwright install --with-deps chromium
+
+      # ── 5. Ejecutar pruebas ────────────────────────────────
+      - name: 🧪 Ejecutar pruebas Playwright
+        run: npm run test:headless
+
+      # ── 6. Publicar reporte y artefactos ──────────────────
+      - name: 📊 Subir reporte HTML
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-html-report
+          path: reports/html-report/
+          retention-days: 30
+
+      - name: 📁 Subir artefactos de prueba (screenshots, videos, trazas)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-test-results
+          path: test-results/
+          retention-days: 30

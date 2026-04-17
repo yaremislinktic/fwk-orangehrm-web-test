@@ -12,6 +12,7 @@ module.exports = defineConfig({
     '02-pim.spec.js',
     '03-addEmployee.spec.js',
     '04-directory.spec.js',
+    '05-smoke.spec.js',
   ],
 
   fullyParallel: false,
